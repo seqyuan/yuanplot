@@ -10,24 +10,40 @@
 library(shiny)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
+shinyUI(tagList(
+  shinythemes::themeSelector(),
+  navbarPage(
+    # theme = "cerulean",  # <--- To use a theme, uncomment this
+    "seqyuan baseplot APP",
+    tabPanel("boxplot",
+             sidebarPanel(
+               shinyFilesButton('boxdata', 'uplod data to plot', 'Please select a file', FALSE),
+               uiOutput("box_xx"),
+               uiOutput("box_yy"),
+               uiOutput("box_comparisons"),
+               br(),
+               br()
+             ),
+             
+             mainPanel(
+               tabsetPanel(type = "tabs",
+                           tabPanel("box",
+                                    plotOutput("plot_box_1"),
+                                    uiOutput("plot_box_2")
+                           ),
+                           tabPanel("vln",
+                                    plotOutput("plot_vln_1")
+                           ),
+                           tabPanel("help",
+                                    DT::dataTableOutput("display_data"),
+                                    includeMarkdown("boxplot.md"),
+                                    br()
+                           )
+               )
+               
+             )
     )
   )
 ))
+
+
