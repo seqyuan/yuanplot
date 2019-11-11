@@ -42,11 +42,18 @@ shinyServer(function(input, output, session) {
     tryCatch({
       ######## plot_vln_1
       output$plot_vln_1 <- renderPlot({
-        #df <- boxplot_data()
-        ggplot(data=boxplot_data(), aes(x= boxplot_data()[[input$box_x]], y = boxplot_data()[[input$box_y]])) + geom_violin() + scale_y_log10()
+        #ggplot(boxplot_data(), aes_string(x= input$box_x, y = input$box_y, fill = input$box_x)) + 
+        #  geom_violin() + scale_y_log10() + geom_boxplot(width = 0.2)
+        ggplot(boxplot_data(), aes_string(x= input$box_x, y = input$box_y)) +
+          geom_violin(trim = F) + scale_y_log10() + geom_boxplot(width = 0.2) +
+          theme_bw() + theme(panel.grid = element_blank())
       })
       ########
-      
+      ######## plot_box_1 without w-test
+      output$plot_box_1 <- renderPlot({
+        ggboxplot(boxplot_data(), x = input$box_x, y = input$box_y, color = input$box_x, palette = "jco")
+      })
+      ######## 
       coml <- t(combn(clist,2))
       for (i in 1:nrow(coml)){
         all_comparisons <- c(all_comparisons, paste(coml[i,1], "vs", coml[i,2],sep=" "))
@@ -63,12 +70,11 @@ shinyServer(function(input, output, session) {
     output$plot_box_1 <- renderPlot({
       my_comparisons <- strsplit(input$all_comparisons, " vs ")
       ggboxplot(boxplot_data(), x = input$box_x, y = input$box_y,
-                color = input$box_x, palette = "jco")+
-        stat_compare_means(comparisons = my_comparisons)+
-        stat_compare_means(label.y = 50)  
+                color = input$box_x, palette = "jco") +
+        stat_compare_means(method = 'wilcox.test', comparisons = my_comparisons) +
+        stat_compare_means(label.y = 50)
     })
   })
-  
 })
 
 

@@ -29,7 +29,7 @@ shinyUI(tagList(
                tabsetPanel(type = "tabs",
                            tabPanel("box",
                                     plotOutput("plot_box_1"),
-                                    uiOutput("plot_box_2")
+                                    plotOutput("plot_box_2")
                            ),
                            tabPanel("vln",
                                     plotOutput("plot_vln_1")
