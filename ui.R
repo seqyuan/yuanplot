@@ -36,6 +36,7 @@ shinyUI(tagList(
                            ),
                            tabPanel("help",
                                     DT::dataTableOutput("display_data"),
+                                    br(),
                                     includeMarkdown("boxplot.md"),
                                     br()
                            )
