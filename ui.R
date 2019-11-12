@@ -8,6 +8,8 @@
 #
 
 library(shiny)
+library(markdown)
+library(DT)
 
 # Define UI for application that draws a histogram
 shinyUI(tagList(
@@ -22,6 +24,7 @@ shinyUI(tagList(
                uiOutput("box_yy"),
                uiOutput("box_comparisons"),
                br(),
+               actionButton("plot_box", "plot!"),
                br()
              ),
              

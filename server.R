@@ -8,12 +8,15 @@
 #
 
 library(shiny)
+library(DT)
+library(ggplot2)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
   boxplot_data <- reactive({ 
-    shinyFileChoose(input, 'boxdata', roots = volumes, session=session, filetypes=c('xls', 'xlsx', 'csv'))
-    plotdata <- parseFilePaths(volumes, input$boxdata)$datapath
+    shinyFileChoose(input, 'boxdata', roots = getVolumes(), session=session, filetypes=c('xls', 'xlsx', 'csv'))
+    plotdata <- parseFilePaths(getVolumes(), input$boxdata)$datapath
+    print(plotdata)
     
     if (length(plotdata) != 0){
       outdata <- read.csv(plotdata, header=TRUE)
@@ -36,19 +39,17 @@ shinyServer(function(input, output, session) {
     selectInput("box_y", "select axis y", choices = colnames(boxplot_data()))
   })
   
-  observeEvent(input$box_x, { 
+  observeEvent(input$plot_box, { 
     all_comparisons <- c()
     clist <- unique(boxplot_data()[[input$box_x]])
     tryCatch({
       ######## plot_vln_1
       output$plot_vln_1 <- renderPlot({
-        #ggplot(boxplot_data(), aes_string(x= input$box_x, y = input$box_y, fill = input$box_x)) + 
-        #  geom_violin() + scale_y_log10() + geom_boxplot(width = 0.2)
-        ggplot(boxplot_data(), aes_string(x= input$box_x, y = input$box_y)) +
+        ggplot(boxplot_data(), aes_string(x= input$box_x, y = input$box_y, group = input$box_x)) +
           geom_violin(trim = F) + scale_y_log10() + geom_boxplot(width = 0.2) +
           theme_bw() + theme(panel.grid = element_blank())
       })
-      ########
+      
       ######## plot_box_1 without w-test
       output$plot_box_1 <- renderPlot({
         ggboxplot(boxplot_data(), x = input$box_x, y = input$box_y, color = input$box_x, palette = "jco")
