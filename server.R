@@ -119,9 +119,23 @@ shinyServer(function(input, output, session) {
         ggplot(plot_data, aes_string(x= input$pbar_x, fill=input$pbar_y)) +
           geom_bar(position = 'fill') +
           coord_flip() +
-          theme_bw() + theme(panel.grid = element_blank())
+          theme_bw() + theme(panel.grid = element_blank()) +
+          scale_fill_manual(values=c('#85AFBD','#E27678','#2B5983','#B41C25','#A58EB0','#571A1D','#398335','#E79F5F','#888A89','#565286','#AD4824','#66AC84','#151311','#4B2E70'))
       })
     })
   })
   
+  ###################################################################  cellmarker table
+  #output$cMH_species <- renderUI({
+  #  selectInput("cmhSpecied", "选择物种", choices = c('Mouse','Human'))
+  #})
+  
+  showCellMarkers <- reactive({ 
+    cellMarkers(input$cmhSpecied)
+  }) 
+  
+  output$cellMarkers <- DT::renderDataTable({
+    DT::datatable(showCellMarkers(), filter = 'top')
+  })
+
 })
