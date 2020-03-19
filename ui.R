@@ -1,6 +1,6 @@
 shinyUI(dashboardPage(
     skin="purple",
-    dashboardHeader(title = "baseplot"),
+    dashboardHeader(title = "yuanplot"),
     sidebar,
     body
   )
